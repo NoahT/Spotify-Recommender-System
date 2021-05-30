@@ -72,3 +72,62 @@ def principal_component_analysis(data, k):
     principal_coords = V.T.dot(data_centralized)
 
     return principal_coords
+
+
+
+# %%
+df["release_date"] = pd.to_numeric(df["release_date"])
+# %%
+# %%
+results = principal_component_analysis(df[0:1000], 10)
+# %%
+#Euclidean distance 
+def e_dist(r1,r2):
+    ''' 
+    Return Euclidian distance with parameters r1,r2 (row 1 and 2)
+    '''
+    row_len = r1.shape[1]
+    sq_dist  = 0.0
+    for i in range(0,(row_len-1)):       
+        sq_dist += (r1.iat[0,i] - r2.iat[0,i])**2   
+    return (np.sqrt(sq_dist))  
+def get_nn(dataset, test_row, k):
+    ''' 
+    Return k nearest neighbors
+    '''
+    #total number of rows
+    row_count = dataset.shape[0]
+    
+    #empty vector of Euclidean distances
+    distances = []
+    
+    #Populate empty vector
+    for i in range (0,row_count-1): 
+        dist = e_dist(test_row, dataset[i:i+1])
+        distances.append((dataset[i:i+1],dist))
+        
+    #sort by placing smallest distances at top/beginning of vector    
+    distances.sort(key=lambda tup: tup[1])
+    
+    #Empty Vector or neighbors
+    neighbors = []
+    #Populate with nearest neigbors (neighbors with smallest distance) within range k 
+    for i in range(k): 
+        neighbors.append(distances[i][0])
+    return neighbors
+        
+# %%
+#Run kNN
+
+#row number
+r_num = 5
+#number of neighbors
+k = 1
+
+#k+1 becasue k[0] returns r_num for some reason. Will fix later
+#Also use subset of data to test
+neighbor = get_nn(results, results[r_num:r_num+1].reshape(14,1), k+1)
+
+#Starting at index 1 for same reason as above 
+neighbor[1:]
+# %%
