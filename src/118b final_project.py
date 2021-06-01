@@ -76,25 +76,34 @@ def principal_component_analysis(data, k):
     return principal_coords
 
 #computes top eigenpairs
-def power_method(matrix, iterations):
+def power_method(A, num_pairs, iterations):
     
+    #initializaing lists to store eigenpairs
     top_eigenvec = []
+    
     top_eigenval = []
     
     #initial nonzero approximation
-    x = x = np.random.rand(A.shape[0],1)
+    x = np.random.rand(A.shape[0],1)
     
-    for i in range(iterations):
+    #iterating based on how many dominant components we want to find 
+    for j in range(num_pairs):
         
-        x = np.dot(A, x)
+        #how many iterations we want to use to converge to the best approximation
+        for i in range(iterations):
         
-        eigenvec_norm = np.linalg.norm(x)
-        eigenvec = x / eigenvec_norm
+            x = np.dot(A, x)
         
-        eigenval = (np.dot(A,x).T.dot(x)) / np.dot(x.T,x)
+            eigenvec_norm = np.linalg.norm(x)
+            eigenvec = x / eigenvec_norm
+        
+            eigenval = (np.dot(A,x).T.dot(x)) / np.dot(x.T,x)
         
         top_eigenvec.append(eigenvec)
         top_eigenval.append(eigenval)
+        
+        #deflation is used to compute further eigenpairs
+        A = A - eigenval * ((np.dot(eigenvec, eigenvec.T)) / (np.dot(eigenvec, eigenvec.T)))
    
     
     return top_eigenvec, top_eigenval
