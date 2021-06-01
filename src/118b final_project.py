@@ -75,6 +75,30 @@ def principal_component_analysis(data, k):
 
     return principal_coords
 
+#computes top eigenpairs
+def power_method(matrix, iterations):
+    
+    top_eigenvec = []
+    top_eigenval = []
+    
+    #initial nonzero approximation
+    x = x = np.random.rand(A.shape[0],1)
+    
+    for i in range(iterations):
+        
+        x = np.dot(A, x)
+        
+        eigenvec_norm = np.linalg.norm(x)
+        eigenvec = x / eigenvec_norm
+        
+        eigenval = (np.dot(A,x).T.dot(x)) / np.dot(x.T,x)
+        
+        top_eigenvec.append(eigenvec)
+        top_eigenval.append(eigenval)
+   
+    
+    return top_eigenvec, top_eigenval
+    
 
 
 # %%
